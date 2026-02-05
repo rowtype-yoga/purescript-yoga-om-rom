@@ -3,7 +3,7 @@ workspace: {}
 package:
   name: yoga-om-rom
   publish:
-    version: 1.0.1
+    version: 1.1.0
     license: MIT-0
     exclude:
       - "src/**/*.test.purs"
@@ -18,11 +18,12 @@ package:
     - either: ">=6.1.0 <7.0.0"
     - exceptions: ">=6.1.0 <7.0.0"
     - foldable-traversable: ">=6.0.0 <7.0.0"
-    - hyrule: ">=2.3.9 <3.0.0"
+    - hyrule: ">=2.4.0 <3.0.0"
     - maybe: ">=6.0.0 <7.0.0"
     - prelude: ">=6.0.2 <7.0.0"
     - refs: ">=6.0.0 <7.0.0"
     - spec: ">=7.6.1 <8.0.0"
+    - st: ">=6.2.0 <7.0.0"
     - tuples: ">=7.0.0 <8.0.0"
     - typelevel-prelude: ">=7.0.0 <8.0.0"
     - variant: ">=8.0.0 <9.0.0"

@@ -12,29 +12,28 @@ module Yoga.Om.Rom
 import Prelude
 
 import Control.Alt ((<|>))
-import Data.Either (Either(..), either)
+import Control.Plus (empty)
+import Data.Either (either)
 import Data.Foldable (foldr)
 import Data.Maybe (Maybe(..))
-import Data.Tuple (Tuple(..))
-import Data.Variant (Variant)
+import Data.Variant (class VariantMatchCases)
 import Effect (Effect)
 import Effect.Aff (Aff, launchAff_)
 import Effect.Class (liftEffect)
+import Control.Monad.ST.Class (liftST)
 import Effect.Exception (Error)
 import Effect.Ref as Ref
-import FRP.Event (Event, makeEvent, subscribe)
-import FRP.Event as Event
+import Effect.Unsafe (unsafePerformEffect)
+import FRP.Event (Event, makeEventE, subscribe)
 import Prim.Row (class Union)
 import Prim.RowList (class RowToList)
-import Type.Row (type (+))
-import Data.Variant (class VariantMatchCases)
 import Yoga.Om (Om)
 import Yoga.Om as Om
 
 -- | A canceller for event-based Om operations
 type EventOmCanceller = Effect Unit
 
--- | Convert an Om computation to a Bolson Event
+-- | Convert an Om computation to a Hyrule Event
 -- | The event fires once when the Om completes successfully
 -- | Errors are handled by the provided error handler in the context
 omToEvent
@@ -46,13 +45,15 @@ omToEvent
   -> { exception :: Error -> Aff a | r }
   -> Om ctx err a
   -> Event a
-omToEvent ctx handlers om = makeEvent \push -> do
-  _ <- launchAff_ do
-    result <- Om.runOm ctx handlers om
-    liftEffect $ push result
-  pure (pure unit)
+omToEvent ctx handlers om = unsafePerformEffect do
+  { event } <- makeEventE \push -> do
+    launchAff_ do
+      result <- Om.runOm ctx handlers om
+      liftEffect $ push result
+    pure $ pure unit
+  pure event
 
--- | Convert a Bolson Event stream to an Om computation
+-- | Convert a Hyrule Event stream to an Om computation
 -- | Takes the first value emitted by the event
 eventToOm
   :: forall ctx err a
@@ -60,7 +61,7 @@ eventToOm
   -> Om ctx err a
 eventToOm event = Om.fromAff do
   resultRef <- liftEffect $ Ref.new Nothing
-  canceller <- liftEffect $ subscribe event \value -> do
+  canceller <- liftEffect $ liftST $ subscribe event \value -> do
     Ref.write (Just value) resultRef
   
   -- Wait for the first value
@@ -69,7 +70,7 @@ eventToOm event = Om.fromAff do
       maybeValue <- liftEffect $ Ref.read resultRef
       case maybeValue of
         Just value -> do
-          liftEffect canceller
+          liftEffect $ liftST canceller
           pure value
         Nothing -> checkValue
   checkValue
@@ -87,7 +88,7 @@ streamOms
   -> Event a
 streamOms ctx handlers oms = 
   foldr (\om acc -> omToEvent ctx handlers om <|> acc) 
-    (Event.makeEvent \_ -> pure (pure unit)) 
+    empty
     oms
 
 -- | Race multiple events, taking the first successful one
@@ -98,7 +99,7 @@ raceEvents
   -> Event a
 raceEvents events = 
   foldr (<|>) 
-    (Event.makeEvent \_ -> pure (pure unit)) 
+    empty
     events
 
 -- | Filter and map an Om computation based on event values
@@ -112,13 +113,16 @@ filterMapOm
   -> { exception :: Error -> Aff (Maybe b) | r }
   -> Event a
   -> Event b
-filterMapOm f ctx handlers event = makeEvent \push -> do
-  subscribe event \value -> do
-    launchAff_ do
-      result <- Om.runOm ctx handlers (f value)
-      case result of
-        Just b -> liftEffect $ push b
-        Nothing -> pure unit
+filterMapOm f ctx handlers event = unsafePerformEffect do
+  { event: outputEvent } <- makeEventE \push -> do
+    _ <- liftST $ subscribe event \value -> do
+      launchAff_ do
+        result <- Om.runOm ctx handlers (f value)
+        case result of
+          Just b -> liftEffect $ push b
+          Nothing -> pure unit
+    pure $ pure unit
+  pure outputEvent
 
 -- | Fold over Om computations triggered by events
 foldOms
@@ -132,15 +136,18 @@ foldOms
   -> { exception :: Error -> Aff b | r }
   -> Event a
   -> Event b
-foldOms f initial ctx handlers event = makeEvent \push -> do
+foldOms f initial ctx handlers event = unsafePerformEffect do
   accRef <- Ref.new initial
-  subscribe event \value -> do
-    launchAff_ do
-      currentAcc <- liftEffect $ Ref.read accRef
-      newAcc <- Om.runOm ctx handlers (f currentAcc value)
-      liftEffect do
-        Ref.write newAcc accRef
-        push newAcc
+  { event: outputEvent } <- makeEventE \push -> do
+    _ <- liftST $ subscribe event \value -> do
+      launchAff_ do
+        currentAcc <- liftEffect $ Ref.read accRef
+        newAcc <- Om.runOm ctx handlers (f currentAcc value)
+        liftEffect do
+          Ref.write newAcc accRef
+          push newAcc
+    pure $ pure unit
+  pure outputEvent
 
 -- | Helper to work with event streams within an Om context
 -- | Provides a clean way to integrate event-driven logic
@@ -151,10 +158,12 @@ withEventStream
   -> Om ctx err (Event b)
 withEventStream event f = do
   ctx <- Om.ask
-  pure $ makeEvent \push -> do
-    subscribe event \value -> do
-      launchAff_ do
-        -- Run the Om with the current context
-        -- Note: Error handling needs to be provided by the caller
-        result <- Om.runReader ctx (f value)
-        either (const $ pure unit) (\r -> liftEffect $ push r) result
+  pure $ unsafePerformEffect do
+    { event: outputEvent } <- makeEventE \push -> do
+      _ <- liftST $ subscribe event \value -> do
+        launchAff_ do
+          -- Run the Om with basic error handling
+          result <- Om.runReader ctx (f value)
+          either (const $ pure unit) (\r -> liftEffect $ push r) result
+      pure $ pure unit
+    pure outputEvent

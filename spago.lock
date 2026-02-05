@@ -24,7 +24,7 @@
               "foldable-traversable": ">=6.0.0 <7.0.0"
             },
             {
-              "hyrule": ">=2.3.0 <2.4.0"
+              "hyrule": ">=2.4.0 <3.0.0"
             },
             {
               "maybe": ">=6.0.0 <7.0.0"
@@ -39,10 +39,7 @@
               "spec": ">=7.6.1 <8.0.0"
             },
             {
-              "tuples": ">=7.0.0 <8.0.0"
-            },
-            {
-              "typelevel-prelude": ">=7.0.0 <8.0.0"
+              "st": ">=6.2.0 <7.0.0"
             },
             {
               "variant": ">=8.0.0 <9.0.0"
@@ -431,8 +428,8 @@
     },
     "hyrule": {
       "type": "registry",
-      "version": "2.3.9",
-      "integrity": "sha256-3IuFxVMD/TRSbfNvewpD0CWKX5mkXlXn2OrMWStZql0=",
+      "version": "2.4.0",
+      "integrity": "sha256-e6NSVNuTa/LinS9SQF8HSL6hK7jwBEwu+DPWgEqZAOs=",
       "dependencies": [
         "arrays",
         "control",
@@ -447,7 +444,6 @@
         "now",
         "ordered-collections",
         "prelude",
-        "record",
         "refs",
         "st",
         "tuples",
