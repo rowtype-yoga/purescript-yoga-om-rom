@@ -12,8 +12,9 @@ package:
       githubOwner: rowtype-yoga
       githubRepo: purescript-yoga-om-rom
   dependencies:
+    - control
+    - hyrule
     - aff: ">=7.1.0 <8.0.0"
-    - bolson: ">=0.3.9 <0.4.0"
     - effect: ">=4.0.0 <5.0.0"
     - either: ">=6.1.0 <7.0.0"
     - exceptions: ">=6.0.0 <7.0.0"

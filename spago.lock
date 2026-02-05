@@ -8,9 +8,7 @@
             {
               "aff": ">=7.1.0 <8.0.0"
             },
-            {
-              "bolson": ">=0.3.9 <0.4.0"
-            },
+            "control",
             {
               "effect": ">=4.0.0 <5.0.0"
             },
@@ -23,6 +21,7 @@
             {
               "foldable-traversable": ">=6.0.0 <7.0.0"
             },
+            "hyrule",
             {
               "maybe": ">=6.0.0 <7.0.0"
             },
@@ -54,7 +53,6 @@
             "arrays",
             "avar",
             "bifunctors",
-            "bolson",
             "catenable-lists",
             "console",
             "const",
@@ -67,11 +65,9 @@
             "enums",
             "exceptions",
             "exists",
-            "fast-vect",
             "filterable",
             "foldable-traversable",
             "foreign",
-            "foreign-object",
             "fork",
             "free",
             "functions",
@@ -220,26 +216,6 @@
         "tuples"
       ]
     },
-    "bolson": {
-      "type": "registry",
-      "version": "0.3.9",
-      "integrity": "sha256-49BnULvxMFbZEIw+6Dm5R6+UasVlv4NJ0j33Jz+gxmY=",
-      "dependencies": [
-        "control",
-        "effect",
-        "fast-vect",
-        "filterable",
-        "foldable-traversable",
-        "foreign-object",
-        "hyrule",
-        "maybe",
-        "prelude",
-        "record",
-        "st",
-        "tuples",
-        "unsafe-coerce"
-      ]
-    },
     "catenable-lists": {
       "type": "registry",
       "version": "7.0.0",
@@ -384,25 +360,6 @@
         "unsafe-coerce"
       ]
     },
-    "fast-vect": {
-      "type": "registry",
-      "version": "1.2.0",
-      "integrity": "sha256-nGfcPN8IPIH6EmmCLTLNnAui0KcEt9RsH7O0vZ8HuvU=",
-      "dependencies": [
-        "arrays",
-        "distributive",
-        "filterable",
-        "foldable-traversable",
-        "lists",
-        "maybe",
-        "ordered-collections",
-        "prelude",
-        "profunctor",
-        "tuples",
-        "unfoldable",
-        "unsafe-coerce"
-      ]
-    },
     "filterable": {
       "type": "registry",
       "version": "5.0.0",
@@ -448,25 +405,6 @@
         "prelude",
         "strings",
         "transformers"
-      ]
-    },
-    "foreign-object": {
-      "type": "registry",
-      "version": "4.1.0",
-      "integrity": "sha256-x/Q7r80z/vmHRKvPwhYmHP/DnJciPtsyGfRTMzayKIU=",
-      "dependencies": [
-        "arrays",
-        "foldable-traversable",
-        "functions",
-        "gen",
-        "lists",
-        "maybe",
-        "prelude",
-        "st",
-        "tailrec",
-        "tuples",
-        "typelevel-prelude",
-        "unfoldable"
       ]
     },
     "fork": {
@@ -559,8 +497,8 @@
     },
     "hyrule": {
       "type": "registry",
-      "version": "2.3.9",
-      "integrity": "sha256-3IuFxVMD/TRSbfNvewpD0CWKX5mkXlXn2OrMWStZql0=",
+      "version": "2.4.0",
+      "integrity": "sha256-e6NSVNuTa/LinS9SQF8HSL6hK7jwBEwu+DPWgEqZAOs=",
       "dependencies": [
         "arrays",
         "control",
@@ -575,7 +513,6 @@
         "now",
         "ordered-collections",
         "prelude",
-        "record",
         "refs",
         "st",
         "tuples",
