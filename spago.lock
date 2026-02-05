@@ -45,7 +45,7 @@
               "variant": ">=8.0.0 <9.0.0"
             },
             {
-              "yoga-om": ">=1.0.7 <2.0.0"
+              "yoga-om": ">=1.2.2 <2.0.0"
             }
           ]
         },
@@ -1059,8 +1059,8 @@
     },
     "yoga-om": {
       "type": "registry",
-      "version": "1.0.7",
-      "integrity": "sha256-7YKQKwTIQi1zMXXXaJMqOdPtyjiKnT8naANhbvZ/PbI=",
+      "version": "1.2.2",
+      "integrity": "sha256-uDV3/o8mUOTIgSEQFqIATPyladzL8BcjURvfS901hgI=",
       "dependencies": [
         "aff",
         "avar",
@@ -1077,7 +1077,6 @@
         "prelude",
         "record",
         "record-studio",
-        "spec",
         "tailrec",
         "transformers",
         "tuples",
