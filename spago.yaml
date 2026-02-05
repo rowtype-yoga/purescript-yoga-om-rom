@@ -6,7 +6,7 @@ package:
   name: yoga-om-rom
   publish:
     version: 1.0.0
-    license: MIT
+    license: MIT-0
     exclude:
       - "src/**/*.test.purs"
       - "src/Test/**"
