@@ -1,7 +1,3 @@
-workspace:
-  package_set:
-    registry: 51.1.0
-
 package:
   name: yoga-om-rom
   publish:
@@ -12,7 +8,8 @@ package:
       - "src/Test/**"
     location:
       githubOwner: rowtype-yoga
-      githubRepo: purescript-yoga-om-rom
+      githubRepo: purescript-yoga-om
+      subdir: packages/yoga-om-rom
   dependencies:
     - aff: ">=7.1.0 <8.0.0"
     - bolson: ">=0.3.9 <0.4.0"
